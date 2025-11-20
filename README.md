@@ -576,24 +576,24 @@ private class MyApexToonTest {
 
 ## Credits
 
+### Toon-Format/Toon
+
+- **Author:** [Johann Schopplich](https://github.com/johannschopplich)
+- **Repository:** [Toon](https://github.com/toon-format/toon)
+- **License:** MIT
+
 ### Original JToon Library
 
-- **Author:** Felipe Stanzani
-- **Repository:** https://github.com/felipestanzani/jtoon
+- **Author:** [Felipe Stanzani](https://github.com/felipestanzani)
+- **Repository:** [JToon](https://github.com/felipestanzani/jtoon)
 - **License:** MIT
 
 ### Additional Resources
 
-- **TOON Format Playground:** https://www.curiouslychase.com/playground/format-tokenization-exploration
-- **Token Efficiency Research:** Based on comparative studies of structured data formats for LLM consumption
-
-## Support
-
-For issues, questions, or contributions:
-
 1. Review existing test cases for examples
 2. Open an issue or pull request in the ApexToon repository
-3. Refer to the original [JToon documentation](https://github.com/felipestanzani/jtoon) for format specifications
+3. Refer to the specification for TOON [Toon SPEC.md](https://github.com/toon-format/toon/blob/main/SPEC.md)
+4. Refer to the original [JToon documentation](https://github.com/felipestanzani/jtoon) for format specifications
 
 ---
 
