@@ -5,6 +5,8 @@ public class ToonStringEscaper {
     
     /**
      * Escape special characters in a string value.
+     * @param value The string to escape
+     * @return The escaped string, or null if input is null
      */
     public static String escape(String value) {
         if (value == null) {
@@ -23,6 +25,8 @@ public class ToonStringEscaper {
     
     /**
      * Unescape special characters in a string value.
+     * @param value The string to unescape
+     * @return The unescaped string, or null if input is null
      */
     public static String unescape(String value) {
         if (value == null) {
@@ -42,6 +46,7 @@ public class ToonStringEscaper {
     /**
      * Validate that a quoted string is properly formatted.
      * Throws ToonException if the string has mismatched quotes.
+     * @param value The string to validate
      */
     public static void validateString(String value) {
         if (value == null) {

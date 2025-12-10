@@ -144,7 +144,7 @@ private class ToonSObjectEncoderTest {
         // Given
         List<Account> accounts = [SELECT Name, Industry FROM Account LIMIT 2];
         List<String> fieldNames = new List<String>{ 'Name', 'Industry' };
-        EncodeOptions options = new EncodeOptions(4, ToonDelimiter.PIPE, false);
+        EncodeOptions options = new EncodeOptions(4, ToonDelimiter.PIPE);
 
         // When
         Test.startTest();

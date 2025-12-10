@@ -1,5 +1,5 @@
 /**
  * Exception thrown during TOON encoding operations.
  */
-public class ToonEncodingException extends ToonException {
+global class ToonEncodingException extends ToonException {
 }

@@ -52,3 +52,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Configurable encoding options (`EncodeOptions`)
 - Configurable decoding options (`DecodeOptions`)
 - Comprehensive test coverage (95 unit tests)
+
+## [0.2.0]
+
+### sfdx changes
+- moved directories for sfdx structure
+- created managed package without password
+- only needed classes for interaction got global access
+- fixing problems and adapting to new TOON 3.0 specification
+- added new features for tabular arrays in list items
+- updated README and CHANGELOG
+- fixing unit tests
+- code analyze and formatting
+- Added @param and @return annotations

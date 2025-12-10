@@ -7,6 +7,8 @@ public class ToonValueDecoder {
     
     /**
      * Decode TOON string to Apex object with default options.
+     * @param toon The TOON format string to decode
+     * @return Decoded Apex object (Map, List, or primitive)
      */
     public static Object decode(String toon) {
         return decode(toon, new DecodeOptions());
@@ -14,6 +16,9 @@ public class ToonValueDecoder {
     
     /**
      * Decode TOON string to Apex object with custom options.
+     * @param toon The TOON format string to decode
+     * @param options Custom decoding options
+     * @return Decoded Apex object (Map, List, or primitive)
      */
     public static Object decode(String toon, DecodeOptions options) {
         if (String.isBlank(toon)) {
@@ -34,6 +39,9 @@ public class ToonValueDecoder {
     
     /**
      * Parse a value at the current parser position.
+     * @param parser The ToonParser instance
+     * @param depth The current indentation depth
+     * @return Parsed value (Map, List, or primitive)
      */
     private static Object parseValue(ToonParser parser, Integer depth) {
         if (!parser.hasMoreLines()) {
@@ -49,8 +57,8 @@ public class ToonValueDecoder {
         
         String content = parser.getCurrentContent(depth);
         
-        // Check for list item array (starts with '- ')
-        if (content.startsWith('- ')) {
+        // Check for list item array (starts with '-')
+        if (content.startsWith('-')) {
             return parseListArray(parser, depth - 1);
         }
         
@@ -73,6 +81,9 @@ public class ToonValueDecoder {
     
     /**
      * Parse an object (map) structure.
+     * @param parser The ToonParser instance
+     * @param depth The current indentation depth
+     * @return Map representation of the object
      */
     private static Map<String, Object> parseObject(ToonParser parser, Integer depth) {
         Map<String, Object> result = new Map<String, Object>();
@@ -110,6 +121,10 @@ public class ToonValueDecoder {
     
     /**
      * Parse a single key-value pair into the map.
+     * @param parser The ToonParser instance
+     * @param content The content string containing the key-value pair
+     * @param depth The current indentation depth
+     * @param result The map to populate with the parsed key-value pair
      */
     private static void parseKeyValuePair(ToonParser parser, String content, Integer depth, Map<String, Object> result) {
         Integer colonIdx = parser.findUnquotedColon(content);
@@ -146,6 +161,9 @@ public class ToonValueDecoder {
     
     /**
      * Parse a nested value (object or array).
+     * @param parser The ToonParser instance
+     * @param parentDepth The parent indentation depth
+     * @return Parsed nested object (Map, List, or primitive)
      */
     private static Object parseNestedValue(ToonParser parser, Integer parentDepth) {
         if (!parser.hasMoreLines()) {
@@ -162,7 +180,7 @@ public class ToonValueDecoder {
         String content = parser.getCurrentContent(nextDepth);
         
         // Check for list format
-        if (content.startsWith('- ')) {
+        if (content.startsWith('-')) {
             return parseListArray(parser, parentDepth);
         }
         
@@ -182,6 +200,10 @@ public class ToonValueDecoder {
     
     /**
      * Parse an array structure.
+     * @param parser The ToonParser instance
+     * @param header The array header string
+     * @param depth The current indentation depth
+     * @return List of parsed array values
      */
     private static List<Object> parseArray(ToonParser parser, String header, Integer depth) {
         String arrayDelimiter = parser.extractDelimiterFromHeader(header);
@@ -218,7 +240,7 @@ public class ToonValueDecoder {
         
         String nextContent = parser.getCurrentContent(nextDepth);
         
-        if (nextContent.startsWith('- ')) {
+        if (nextContent.startsWith('-')) {
             return parseListArray(parser, depth);
         }
         
@@ -229,6 +251,11 @@ public class ToonValueDecoder {
     
     /**
      * Parse tabular array format.
+     * @param parser The ToonParser instance
+     * @param header The array header string
+     * @param depth The current indentation depth
+     * @param arrayDelimiter The delimiter character for array values
+     * @return List of parsed tabular rows as maps
      */
     private static List<Object> parseTabularArray(ToonParser parser, String header, Integer depth, String arrayDelimiter) {
         List<String> fields = parser.extractTabularFields(header, arrayDelimiter);
@@ -265,6 +292,10 @@ public class ToonValueDecoder {
     
     /**
      * Parse a single tabular row.
+     * @param rowContent The row content string
+     * @param fields The list of field names
+     * @param delimiter The delimiter character
+     * @return Map representing the parsed row with field names as keys
      */
     private static Map<String, Object> parseTabularRow(String rowContent, List<String> fields, String delimiter) {
         Map<String, Object> row = new Map<String, Object>();
@@ -279,6 +310,9 @@ public class ToonValueDecoder {
     
     /**
      * Parse list item array format.
+     * @param parser The ToonParser instance
+     * @param depth The current indentation depth
+     * @return List of parsed list items
      */
     private static List<Object> parseListArray(ToonParser parser, Integer depth) {
         List<Object> result = new List<Object>();
@@ -300,7 +334,7 @@ public class ToonValueDecoder {
             if (lineDepth == depth + 1) {
                 String content = parser.getCurrentContent(lineDepth);
                 
-                if (content.startsWith('- ')) {
+                if (content.startsWith('-')) {
                     Object item = parseListItem(parser, content, depth);
                     result.add(item);
                 } else {
@@ -320,10 +354,23 @@ public class ToonValueDecoder {
      * Per TOON v3.0 (Section 10):
      * - If item starts with keyed tabular array: rows at depth +2, other fields at depth +1
      * - For all other cases: first field on hyphen line, other fields at depth +1
+     * @param parser The ToonParser instance
+     * @param content The content string of the list item
+     * @param depth The current indentation depth
+     * @return Parsed list item (Map, List, or primitive)
      */
     private static Object parseListItem(ToonParser parser, String content, Integer depth) {
-        String itemContent = content.length() > 2 ? content.substring(2).trim() : '';
-        
+        // Extract content after hyphen: '- value' -> 'value', or bare '-' -> ''
+        String itemContent = '';
+        if (content.length() > 1 && content.substring(1, 2) == ' ') {
+            // Format: '- value'
+            itemContent = content.substring(2).trim();
+        } else if (content.length() > 1) {
+            // Format: '-value' (no space)
+            itemContent = content.substring(1).trim();
+        }
+        // If content is bare '-', itemContent remains empty string
+
         parser.nextLine();
         
         if (String.isBlank(itemContent)) {
@@ -389,6 +436,10 @@ public class ToonValueDecoder {
      * Parse a tabular array field in a list item (v3.0 format).
      * Reads header from hyphen line and rows at depth +2 relative to hyphen.
      * Note: depth parameter is the parent array depth, hyphen is at depth+1.
+     * @param parser The ToonParser instance
+     * @param content The content string containing the tabular array header
+     * @param depth The parent array depth
+     * @param itemObj The map to populate with the parsed tabular array
      */
     private static void parseListItemTabularField(ToonParser parser, String content, Integer depth, Map<String, Object> itemObj) {
         Integer bracketIdx = content.indexOf('[');
@@ -446,6 +497,9 @@ public class ToonValueDecoder {
     
     /**
      * Find index of first unquoted delimiter in content.
+     * @param content The content string to search
+     * @param delimiter The delimiter character to find
+     * @return Index of first unquoted delimiter, or -1 if not found
      */
     private static Integer findUnquotedDelimiter(String content, String delimiter) {
         Boolean inQuotes = false;
@@ -475,6 +529,9 @@ public class ToonValueDecoder {
      * Parse additional fields in a list item object at depth +1 relative to hyphen.
      * Used after tabular array field in v3.0 format.
      * Note: depth parameter is parent array depth, hyphen is at depth+1, sibling fields at depth+2.
+     * @param parser The ToonParser instance
+     * @param itemObj The map to populate with parsed fields
+     * @param depth The parent array depth
      */
     private static void parseListItemFieldsAtDepthPlusOne(ToonParser parser, Map<String, Object> itemObj, Integer depth) {
         // Hyphen is at depth+1, sibling fields are at (depth+1)+1 = depth+2
@@ -498,7 +555,7 @@ public class ToonValueDecoder {
             String content = parser.getCurrentContent(lineDepth);
             
             // Stop if we hit another list item (shouldn't happen at this depth, but be safe)
-            if (content.startsWith('- ')) {
+            if (content.startsWith('-')) {
                 break;
             }
             
@@ -512,6 +569,9 @@ public class ToonValueDecoder {
     
     /**
      * Parse additional fields in a list item object.
+     * @param parser The ToonParser instance
+     * @param itemObj The map to populate with parsed fields
+     * @param depth The current indentation depth
      */
     private static void parseListItemFields(ToonParser parser, Map<String, Object> itemObj, Integer depth) {
         while (parser.hasMoreLines()) {
@@ -544,6 +604,10 @@ public class ToonValueDecoder {
     
     /**
      * Parse a keyed array structure.
+     * @param parser The ToonParser instance
+     * @param content The content string containing the keyed array
+     * @param depth The current indentation depth
+     * @return Parsed keyed structure as a Map
      */
     private static Object parseKeyedStructure(ToonParser parser, String content, Integer depth) {
         Map<String, Object> result = new Map<String, Object>();
@@ -553,6 +617,10 @@ public class ToonValueDecoder {
     
     /**
      * Parse keyed array into existing map.
+     * @param parser The ToonParser instance
+     * @param content The content string containing the keyed array
+     * @param depth The current indentation depth
+     * @param result The map to populate with the parsed keyed array
      */
     private static void parseKeyedArrayIntoMap(ToonParser parser, String content, Integer depth, Map<String, Object> result) {
         Integer bracketIdx = content.indexOf('[');

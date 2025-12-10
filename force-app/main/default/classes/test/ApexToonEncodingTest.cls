@@ -173,7 +173,7 @@ private class ApexToonEncodingTest {
                 'value' => 'test'
             }
         };
-        EncodeOptions options = new EncodeOptions(4, ToonDelimiter.COMMA, false);
+        EncodeOptions options = new EncodeOptions(4, ToonDelimiter.COMMA);
 
         // When
         Test.startTest();

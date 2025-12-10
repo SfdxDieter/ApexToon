@@ -17,9 +17,9 @@ public class ToonArrayEncoder {
      * - Mixed or complex -> list item format
      * 
      * @param key Optional key (null for standalone array)
-     * @param array The list to encode
-     * @param writer The LineWriter
-     * @param depth Current depth
+     * @param items The list to encode
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
      * @param options Encoding options
      */
     public static void encodeArray(String key, List<Object> items, ToonLineWriter writer, Integer depth, EncodeOptions options) {
@@ -37,7 +37,7 @@ public class ToonArrayEncoder {
         
         if (ToonTypeHelper.areAllPrimitives(items)) {
             encodeInlineArray(key, items, writer, depth, options);
-        } else if (ToonTypeHelper.areAllMaps(items) && ToonTypeHelper.haveUniformKeys(items)) {
+        } else if (ToonTypeHelper.areAllMaps(items) && ToonTypeHelper.haveUniformKeys(items) && ToonTypeHelper.allMapValuesArePrimitives(items) && !((Map<String, Object>)items[0]).isEmpty()) {
             encodeTabularArray(key, items, writer, depth, options);
         } else {
             encodeListItemArray(key, items, writer, depth, options);
@@ -47,6 +47,12 @@ public class ToonArrayEncoder {
     /**
      * Encode array of primitives in inline format.
      * Format: tags[3]: a,b,c
+     *
+     * @param key Optional key for the array
+     * @param items The list of primitive items to encode
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
+     * @param options Encoding options
      */
     private static void encodeInlineArray(String key, List<Object> items, ToonLineWriter writer, Integer depth, EncodeOptions options) {
         String header = ToonHeaderFormatter.formatInlineHeader(key, items.size(), options);
@@ -68,6 +74,12 @@ public class ToonArrayEncoder {
      *   items[2]{id,name}:
      *     1,Alice
      *     2,Bob
+     *
+     * @param key Optional key for the array
+     * @param items The list of uniform object items to encode
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
+     * @param options Encoding options
      */
     private static void encodeTabularArray(String key, List<Object> items, ToonLineWriter writer, Integer depth, EncodeOptions options) {
         List<String> fields = ToonTypeHelper.getUniformKeys(items);
@@ -97,6 +109,12 @@ public class ToonArrayEncoder {
      *     nested: value
      *   - item2
      *     nested: value
+     *
+     * @param key Optional key for the array
+     * @param items The list of mixed or complex items to encode
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
+     * @param options Encoding options
      */
     private static void encodeListItemArray(String key, List<Object> items, ToonLineWriter writer, Integer depth, EncodeOptions options) {
         String header = ToonHeaderFormatter.formatInlineHeader(key, items.size(), options);
@@ -124,6 +142,11 @@ public class ToonArrayEncoder {
      * Per TOON v3.0 (Section 10):
      * - If first field is a tabular array: emit header on hyphen line, rows at depth +2, other fields at depth +1
      * - For all other cases: first field on same line as dash, rest indented at depth +1
+     *
+     * @param obj The map object to encode as a list item
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
+     * @param options Encoding options
      */
     private static void encodeListItemObject(Map<String, Object> obj, ToonLineWriter writer, Integer depth, EncodeOptions options) {
         List<String> keys = new List<String>(obj.keySet());

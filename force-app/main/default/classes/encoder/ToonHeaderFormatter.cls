@@ -54,6 +54,10 @@ public class ToonHeaderFormatter {
     /**
      * Format the fields list for tabular format.
      * Example: ['id', 'name', 'age'] with ',' -> '{id,name,age}'
+     *
+     * @param fields The list of field names
+     * @param delimiter The delimiter character
+     * @return Formatted fields string enclosed in braces
      */
     private static String formatFieldsList(List<String> fields, String delimiter) {
         List<String> encodedFields = new List<String>();

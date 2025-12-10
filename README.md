@@ -20,7 +20,6 @@ This is an early release. Please report any issues or feature requests via githu
 - [Advanced Usage](#advanced-usage)
 - [Performance](#performance)
 - [Testing](#testing)
-- [Documentation](#documentation)
 - [Credits](#credits)
 
 ## What is TOON?
@@ -141,7 +140,23 @@ products[3]{sku,qty,price}:
 
 ## Installation
 
+This library can be installed into your Salesforce org as managed package or deployed directly via Salesforce DX.
+It does not have any external dependencies or a password for installation.
+
+It is a Managed Package and can be installed into Production, Developer, or Scratch Orgs
+The namespace is toonify
+
+### Via Managed Package
+
+Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tbG0000005yWbQAI
+use https://test.salesforce.com for Sandbox Orgs
+
 ### Via Salesforce DX
+
+    sf install package  --wait 360  --security-type "AdminsOnly"  --package 04tbG0000005yWbQAI -u <your-org-alias>
+
+
+### Via Source Deployment 
 
 1. Clone or download this repository
 2. Deploy to your Salesforce org:
@@ -163,7 +178,7 @@ Map<String, Object> data = new Map<String, Object>{
     'tags' => new List<String>{'developer', 'pioneer'}
 };
 
-String toon = ApexToon.encode(data);
+String toon = toonify.ApexToon.encode(data);
 System.debug(toon);
 ```
 
@@ -180,7 +195,7 @@ tags[2]: developer,pioneer
 
 ```apex
 String toon = 'id: 123\nname: Ada Lovelace\nactive: true';
-Object decoded = ApexToon.decode(toon);
+Object decoded = toonify.ApexToon.decode(toon);
 
 Map<String, Object> result = (Map<String, Object>) decoded;
 System.debug(result.get('name')); // Ada Lovelace
@@ -191,10 +206,10 @@ System.debug(result.get('name')); // Ada Lovelace
 ```apex
 // JSON to TOON
 String json = '{"id":123,"name":"Ada"}';
-String toon = ApexToon.encodeJson(json);
+String toon = toonify.ApexToon.encodeJson(json);
 
 // TOON to JSON
-String jsonOutput = ApexToon.decodeToJson(toon);
+String jsonOutput = toonify.ApexToon.decodeToJson(toon);
 ```
 
 ## Core Features
@@ -333,7 +348,7 @@ List<Schema.SObjectField> fields = new List<Schema.SObjectField>{
 };
 
 // Encode to TOON
-String toon = ApexToon.encodeSObjects(accounts, fields);
+String toon = toonify.ApexToon.encodeSObjects(accounts, fields);
 ```
 
 **Output:**
@@ -364,7 +379,7 @@ List<String> fieldNames = new List<String>{
     'Account.Industry'
 };
 
-String toon = ApexToon.encodeSObjects(contacts, fieldNames);
+String toon = toonify.ApexToon.encodeSObjects(contacts, fieldNames);
 ```
 
 **Output:**
@@ -393,7 +408,7 @@ List<Schema.SObjectField> fields = new List<Schema.SObjectField>{
     Custom_Product__c.Inventory_Count__c
 };
 
-String toon = ApexToon.encodeSObjects(products, fields);
+String toon = toonify.ApexToon.encodeSObjects(products, fields);
 ```
 
 ## Advanced Usage
@@ -403,11 +418,11 @@ String toon = ApexToon.encodeSObjects(products, fields);
 ```apex
 // Use tabs for better spreadsheet compatibility
 EncodeOptions opts = new EncodeOptions(2, ToonDelimiter.TAB);
-String toon = ApexToon.encode(data, opts);
+String toon = toonify.ApexToon.encode(data, opts);
 
 // Use pipes for clarity with comma-heavy data
 EncodeOptions pipeOpts = new EncodeOptions(2, ToonDelimiter.PIPE);
-String toon = ApexToon.encode(addresses, pipeOpts);
+String toon = toonify.ApexToon.encode(addresses, pipeOpts);
 ```
 
 ### Complex Nested Structures
@@ -431,7 +446,7 @@ Map<String, Object> complex = new Map<String, Object>{
     }
 };
 
-String toon = ApexToon.encode(complex);
+String toon = toonify.ApexToon.encode(complex);
 ```
 
 **Output:**
@@ -448,13 +463,13 @@ company:
 
 ```apex
 try {
-    String toon = ApexToon.encode(data);
+    String toon = toonify.ApexToon.encode(data);
 } catch (ToonEncodingException e) {
     System.debug('Encoding failed: ' + e.getMessage());
 }
 
 try {
-    Object result = ApexToon.decode(toonString);
+    Object result = toonify.ApexToon.decode(toonString);
 } catch (ToonDecodingException e) {
     System.debug('Decoding failed: ' + e.getMessage());
 }
@@ -467,7 +482,7 @@ try {
 DecodeOptions lenient = new DecodeOptions();
 lenient.strict = false;
 
-Object result = ApexToon.decode(possiblyInvalidToon, lenient);
+Object result = toonify.ApexToon.decode(possiblyInvalidToon, lenient);
 if (result == null) {
     System.debug('Failed to decode, but no exception thrown');
 }
@@ -499,17 +514,17 @@ ApexToon is designed to be governor-limit friendly:
 ```apex
 // ✅ Good: Query only needed fields
 List<Account> accounts = [SELECT Name, Industry FROM Account];
-String toon = ApexToon.encodeSObjects(accounts,
+String toon = toonify.ApexToon.encodeSObjects(accounts,
     new List<Schema.SObjectField>{Account.Name, Account.Industry});
 
 // ❌ Bad: Query all fields then filter
 List<Account> accounts = [SELECT FIELDS(ALL) FROM Account];
-String toon = ApexToon.encodeSObjects(accounts, someFields);
+String toon = toonify.ApexToon.encodeSObjects(accounts, someFields);
 
 // ✅ Good: Batch large datasets
 for (Integer i = 0; i < 1000; i += 100) {
     List<SObject> batch = records.subList(i, Math.min(i + 100, 1000));
-    String toon = ApexToon.encodeSObjects(batch, fields);
+    String toon = toonify.ApexToon.encodeSObjects(batch, fields);
     // Process batch
 }
 ```
@@ -543,8 +558,8 @@ private class MyApexToonTest {
         };
 
         // When
-        String toon = ApexToon.encode(original);
-        Object decoded = ApexToon.decode(toon);
+        String toon = toonify.ApexToon.encode(original);
+        Object decoded = toonify.ApexToon.decode(toon);
 
         // Then
         Map<String, Object> result = (Map<String, Object>) decoded;
@@ -569,6 +584,11 @@ private class MyApexToonTest {
 - **Repository:** [JToon](https://github.com/felipestanzani/jtoon)
 - **License:** MIT
 
+### ApexToon
+- **Author:** [David Pinchen](https://github.com/Eacaw)
+- **Repository:** [ApexToon](https://github.com/Eacaw/ApexToon)
+- **License:** MIT
+- 
 ### Additional Resources
 
 1. Review existing test cases for examples
@@ -579,4 +599,4 @@ private class MyApexToonTest {
 ---
 
 - **Status:** Early Integration Testing
-- **Version:** 0.1.0
+- **Version:** 0.2.0

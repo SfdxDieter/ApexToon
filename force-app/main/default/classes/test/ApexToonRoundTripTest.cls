@@ -335,7 +335,7 @@ private class ApexToonRoundTripTest {
                 'value' => 'test'
             }
         };
-        EncodeOptions encodeOpts = new EncodeOptions(4, ToonDelimiter.COMMA, false);
+        EncodeOptions encodeOpts = new EncodeOptions(4, ToonDelimiter.COMMA);
         DecodeOptions decodeOpts = new DecodeOptions();
 
         // When

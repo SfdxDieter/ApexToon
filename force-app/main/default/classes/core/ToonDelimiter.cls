@@ -1,7 +1,7 @@
 /**
  * Delimiter options for TOON array formatting.
  */
-public enum ToonDelimiter {
+global enum ToonDelimiter {
     COMMA,
     TAB,
     PIPE

@@ -1,21 +1,21 @@
 /**
  * Configuration options for encoding objects to TOON format.
  */
-public class EncodeOptions {
-    public Integer indent { get; set; }
-    public ToonDelimiter delimiter { get; set; }
+global class EncodeOptions {
+    global Integer indent { get; set; }
+    global ToonDelimiter delimiter { get; set; }
 
-    public EncodeOptions() {
+    global EncodeOptions() {
         this.indent = 2;
         this.delimiter = ToonDelimiter.COMMA;
     }
 
-    public EncodeOptions(Integer indent, ToonDelimiter delimiter) {
+    global EncodeOptions(Integer indent, ToonDelimiter delimiter) {
         this.indent = indent;
         this.delimiter = delimiter;
     }
 
-    public String getDelimiterString() {
+    global String getDelimiterString() {
         switch on this.delimiter {
             when COMMA {
                 return ',';
