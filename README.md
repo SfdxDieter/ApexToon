@@ -9,6 +9,11 @@ ApexToon is a Salesforce Apex port of the [JToon](https://github.com/felipestanz
 
 This is an early release. Please report any issues or feature requests via github issues, or open a pull request.
 
+TOON can currently be used for encoding and decoding data structures to reduce token usage when interacting with Large Language Models (LLMs) such as OpenAI's GPT series.
+(December 25) BUT only can be contained in prompts and completions, not yet in function calls.
+When it becomes possible to use custom data formats in function calls, TOON will be even more powerful for structured data exchange with LLMs.
+Then the content-type "application/toon" can be used to specify TOON formatted data. Maybe also as "response_format" parameter in future OpenAI API calls.
+
 ## Table of Contents
 
 - [What is TOON?](#what-is-toon)
