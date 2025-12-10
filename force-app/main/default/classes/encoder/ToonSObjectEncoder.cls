@@ -11,6 +11,11 @@ public class ToonSObjectEncoder {
     
     /**
      * Encode SObjects with explicit field selection using SObjectField.
+     *
+     * @param records The list of SObject records to encode
+     * @param fields The list of SObjectField to include in encoding
+     * @param options Encoding options
+     * @return TOON-formatted string representation of the SObjects
      */
     public static String encodeSObjects(List<SObject> records, List<Schema.SObjectField> fields, EncodeOptions options) {
         if (records == null || records.isEmpty()) {
@@ -33,6 +38,11 @@ public class ToonSObjectEncoder {
     
     /**
      * Encode SObjects with field names (supports relationships via dot notation).
+     *
+     * @param records The list of SObject records to encode
+     * @param fieldNames The list of field name strings (supports dot notation for relationships)
+     * @param options Encoding options
+     * @return TOON-formatted string representation of the SObjects
      */
     public static String encodeSObjects(List<SObject> records, List<String> fieldNames, EncodeOptions options) {
         if (records == null || records.isEmpty()) {
@@ -56,6 +66,11 @@ public class ToonSObjectEncoder {
     /**
      * Encode SObjects with type metadata included.
      * Wraps the encoded records with SObject type information.
+     *
+     * @param mappedRecords The list of mapped records to encode
+     * @param sObjectType The SObject type metadata
+     * @param options Encoding options
+     * @return TOON-formatted string with type metadata
      */
     private static String encodeSObjectsWithType(List<Object> mappedRecords, Schema.SObjectType sObjectType, EncodeOptions options) {
         String sObjectName = sObjectType.getDescribe().getName();
@@ -69,6 +84,10 @@ public class ToonSObjectEncoder {
     
     /**
      * Convert SObject to Map using SObjectField list.
+     *
+     * @param record The SObject record to convert
+     * @param fields The list of SObjectField to include
+     * @return Map representation of the SObject with selected fields
      */
     public static Map<String, Object> sObjectToMap(SObject record, List<Schema.SObjectField> fields) {
         Map<String, Object> result = new Map<String, Object>();
@@ -93,6 +112,10 @@ public class ToonSObjectEncoder {
     
     /**
      * Convert SObject to Map using field name strings (supports relationships).
+     *
+     * @param record The SObject record to convert
+     * @param fieldNames The list of field names (supports dot notation for relationships)
+     * @return Map representation of the SObject with selected fields
      */
     public static Map<String, Object> sObjectToMapByFieldNames(SObject record, List<String> fieldNames) {
         Map<String, Object> result = new Map<String, Object>();
@@ -116,6 +139,10 @@ public class ToonSObjectEncoder {
     
     /**
      * Get field value supporting dot notation for relationships.
+     *
+     * @param record The SObject record to extract value from
+     * @param fieldPath The field path (supports dot notation for relationships)
+     * @return The field value, or null if not found
      */
     private static Object getFieldValue(SObject record, String fieldPath) {
         if (!fieldPath.contains('.')) {
@@ -137,6 +164,9 @@ public class ToonSObjectEncoder {
     
     /**
      * Normalize field values for TOON encoding.
+     *
+     * @param value The field value to normalize
+     * @return Normalized value suitable for TOON encoding
      */
     private static Object normalizeFieldValue(Object value) {
         if (value == null) {
@@ -165,6 +195,9 @@ public class ToonSObjectEncoder {
     
     /**
      * Validate all records are same SObject type.
+     *
+     * @param records The list of SObject records to validate
+     * @param expectedType The expected SObject type
      */
     private static void validateSameType(List<SObject> records, Schema.SObjectType expectedType) {
         for (SObject record : records) {
@@ -179,6 +212,9 @@ public class ToonSObjectEncoder {
     
     /**
      * Get all accessible fields for an SObject type.
+     *
+     * @param sObjectType The SObject type to get fields for
+     * @return List of accessible SObjectField instances
      */
     public static List<Schema.SObjectField> getAccessibleFields(Schema.SObjectType sObjectType) {
         List<Schema.SObjectField> accessibleFields = new List<Schema.SObjectField>();

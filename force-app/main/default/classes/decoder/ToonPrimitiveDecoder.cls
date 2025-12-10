@@ -55,6 +55,9 @@ public class ToonPrimitiveDecoder {
     
     /**
      * Parse a quoted string, removing quotes and unescaping.
+     *
+     * @param value The quoted string to parse
+     * @return The unescaped string without quotes
      */
     private static String parseQuotedString(String value) {
         ToonStringEscaper.validateString(value);
@@ -65,6 +68,9 @@ public class ToonPrimitiveDecoder {
     /**
      * Check if value looks like octal number (leading zeros).
      * These should be treated as strings to avoid confusion.
+     *
+     * @param value The string value to check
+     * @return True if the value appears to be an octal number, false otherwise
      */
     private static Boolean isOctalNumber(String value) {
         if (!value.startsWith('0') && !value.startsWith('-0')) {
@@ -87,6 +93,9 @@ public class ToonPrimitiveDecoder {
     /**
      * Try to parse value as a number.
      * Returns null if not a valid number.
+     *
+     * @param value The string value to parse as a number
+     * @return Decimal or Long if valid number, null otherwise
      */
     private static Object tryParseNumber(String value) {
         try {
@@ -135,6 +144,10 @@ public class ToonPrimitiveDecoder {
     
     /**
      * Split string by delimiter while respecting quoted sections.
+     *
+     * @param input The string to split
+     * @param delimiter The delimiter character to split by
+     * @return List of string segments split by delimiter, preserving quoted content
      */
     private static List<String> splitRespectingQuotes(String input, String delimiter) {
         List<String> result = new List<String>();

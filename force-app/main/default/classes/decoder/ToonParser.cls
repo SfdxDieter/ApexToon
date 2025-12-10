@@ -128,6 +128,9 @@ public class ToonParser {
     /**
      * Extract delimiter from array header.
      * Checks for \t or | after the length.
+     *
+     * @param header The array header string
+     * @return The delimiter character (comma by default)
      */
     public String extractDelimiterFromHeader(String header) {
         Integer openBracket = header.indexOf('[');

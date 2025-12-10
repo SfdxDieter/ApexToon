@@ -39,6 +39,9 @@ public class ToonPrimitiveEncoder {
     
     /**
      * Encode a boolean value.
+     *
+     * @param value The boolean value to encode
+     * @return String representation of the boolean ('true' or 'false')
      */
     private static String encodeBoolean(Boolean value) {
         return value ? ToonConstants.TRUE_VALUE : ToonConstants.FALSE_VALUE;
@@ -48,6 +51,9 @@ public class ToonPrimitiveEncoder {
      * Encode a number (Decimal or Double) with proper formatting.
      * Removes trailing zeros and unnecessary decimal points per TOON spec.
      * Examples: 1.500 -> "1.5", 1.0 -> "1", -0 -> "0"
+     *
+     * @param value The numeric value to encode (Decimal, Double, Integer, or Long)
+     * @return String representation of the number with trailing zeros removed
      */
     private static String encodeNumber(Object value) {
         Decimal decimalValue;
@@ -79,6 +85,9 @@ public class ToonPrimitiveEncoder {
     /**
      * Remove trailing zeros from decimal numbers per TOON canonical form.
      * Examples: "1.500" -> "1.5", "1.0" -> "1", "42" -> "42"
+     *
+     * @param numberString The number string to process
+     * @return The number string with trailing zeros and unnecessary decimal point removed
      */
     private static String stripTrailingZeros(String numberString) {
         if (!numberString.contains('.')) {
@@ -141,6 +150,9 @@ public class ToonPrimitiveEncoder {
     
     /**
      * Get the type name of an object for error messages.
+     *
+     * @param value The object to get the type name for
+     * @return String representation of the object's type name
      */
     private static String getTypeName(Object value) {
         if (value == null) {

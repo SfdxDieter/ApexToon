@@ -16,6 +16,10 @@ public class ToonStringValidator {
      * - Looks like a number
      * - Has leading/trailing whitespace
      * - Contains special characters like newlines or quotes
+     *
+     * @param value The string value to check
+     * @param delimiter The delimiter character being used
+     * @return True if the value can be written without quotes
      */
     public static Boolean isSafeUnquoted(String value, String delimiter) {
         if (String.isBlank(value)) {
@@ -56,6 +60,9 @@ public class ToonStringValidator {
      * 
      * Keys must start with a letter or underscore and contain only
      * letters, numbers, and underscores to be unquoted.
+     *
+     * @param key The key to validate
+     * @return True if the key can be written without quotes
      */
     public static Boolean isValidUnquotedKey(String key) {
         if (String.isBlank(key)) {
@@ -67,6 +74,9 @@ public class ToonStringValidator {
     
     /**
      * Remove surrounding quotes from a string if present.
+     *
+     * @param value The string to process
+     * @return The string without surrounding quotes, or unchanged if no quotes
      */
     public static String removeQuotes(String value) {
         if (String.isBlank(value)) {

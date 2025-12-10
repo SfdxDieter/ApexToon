@@ -79,6 +79,12 @@ public class ToonObjectEncoder {
     
     /**
      * Encode an SObject field by converting it to a Map.
+     *
+     * @param encodedKey The encoded key string
+     * @param obj The SObject to encode
+     * @param writer The line writer to write output to
+     * @param depth Current indentation depth
+     * @param options Encoding options
      */
     private static void encodeSObjectField(String encodedKey, SObject obj, ToonLineWriter writer, Integer depth, EncodeOptions options) {
         String jsonStr = JSON.serialize(obj);

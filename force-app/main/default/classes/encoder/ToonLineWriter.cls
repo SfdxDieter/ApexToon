@@ -4,7 +4,7 @@
  * Accumulates lines of output and manages indentation depth.
  */
 public class ToonLineWriter {
-    private List<String> lines;
+    private final List<String> lines;
     private String indentationString;
     
     public ToonLineWriter(Integer indentSize) {

@@ -39,6 +39,10 @@ public class ToonValueEncoder {
     
     /**
      * Encode an SObject by converting it to a Map first.
+     *
+     * @param obj The SObject to encode
+     * @param writer The line writer to write output to
+     * @param options Encoding options
      */
     private static void encodeSObject(SObject obj, ToonLineWriter writer, EncodeOptions options) {
         String jsonStr = JSON.serialize(obj);
