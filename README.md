@@ -160,6 +160,39 @@ use https://test.salesforce.com for Sandbox Orgs
 
     sf install package  --wait 360  --security-type "AdminsOnly"  --package 04tbG0000005yWbQAI -u <your-org-alias>
 
+### Via Unlocked Package Source
+
+you can create your own unlocked package from the source code. 
+First you need to have a devhub org.
+
+The only missing file is the sfdx-project.json in the root directory of this repository
+
+    create a sfdx-project.json with the following content:
+```json
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "namespace": "toonify",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "65.0"
+}
+```
+use the sf create package command to create an unlocked package
+
+    sf package create --name ApexToon --package-type Unlocked --path force-app -v <your-devhub-alias> -d "ApexToon - Token-Oriented Object Notation for Salesforce. ApexToon is a Salesforce Apex port of the JToon library, enabling bidirectional conversion between Apex objects/JSON and TOON (Token-Oriented Object Notation) format for efficient AI interactions. With additional support for working with SObjects within Salesforce. MIT License.
+
+take the package Id from the output and create a new package version
+
+    sf package version create -c --installation-key-bypass -w 60 -p YOUR_PACKAGE_ID
+
+ now you can install the unlocked package into your org
+
+    sf install package  --wait 360  --security-type "AdminsOnly"  --package YOUR_PACKAGE_VERSION_ID -u <your-org-alias>
+
 
 ### Via Source Deployment 
 
